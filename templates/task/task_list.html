@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Tasks List{% endblock title %}
+
+{% block content %}
+    <div class="tasks-container">
+        <h2>Tasks</h2>
+
+        <div class="tasks-list">
+            {% if tasks %}
+                {% for task in tasks %}
+                    <div class="task-panel">
+                        <div class="task-header">
+                            <h3>{{ task.name }}</h3>
+                            <div class="task-status">
+                                {% if task.status %}
+                                    <span class="status complete">&#10004; Completed</span>
+                                {% else %}
+                                    <span class="status incomplete">&#10006; Incomplete</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <p>{{ task.description|default:"No description" }}</p>
+                        <div class="task-actions">
+                            {% if not task.status %}
+                                <a href="{% url 'toggle-task-status' task.id %}" class="btn btn-complete">&#10004; Mark as Complete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h3>No Tasks &#10006;</h3>
+            {% endif %}
+        </div>
+    </div>
+
+    <style>
+        /* Основной стиль */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s;
+        }
+
+        .tasks-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tasks-container h2 {
+            text-align: center;
+            color: #00509e;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        .tasks-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .task-panel {
+            background-color: #f0f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .task-panel:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-header h3 {
+            font-size: 20px;
+            color: #333;
+            transition: color 0.3s;
+        }
+
+        .task-status {
+            font-weight: bold;
+        }
+
+        .task-panel p {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .status.complete {
+            color: #4caf50;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .status.incomplete {
+            color: #ff5a5a;
+            animation: pulse 1s infinite;
+        }
+
+        .task-actions {
+            text-align: right;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 8px 15px;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-complete {
+            background-color: #007bff;
+        }
+
+        .btn-complete:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+    </style>
+{% endblock content %}
